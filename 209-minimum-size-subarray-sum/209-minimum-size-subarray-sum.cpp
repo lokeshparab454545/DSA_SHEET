@@ -1,40 +1,24 @@
 class Solution {
 public:
-    bool existWindow(vector<int> &nums, int size, int s) {
-        int sum = 0;
-        for (int i = 0; i < nums.size(); ++i) {
-            if (i >= size) sum -= nums[i-size];
-            sum += nums[i];
-            if (sum >= s) return true;
-        }
-        return false;
-    }
-    int minSubArrayLen(int target, vector<int>& nums) {
-        int n = nums.size(), s = 1, e = n, ans = 0;
-        while(s<=e){
-            int mid = s + (e-s)/2;
-            if(existWindow(nums, mid, target)){
-                 ans = mid;
-                 e = mid-1;
+    int minSubArrayLen(int k, vector<int>& nums) {
+        int i = 0, j = 0, sum = 0, mini = INT_MAX;
+        while(j<nums.size()){
+            sum += nums[j];
+            if(sum < k){
+                j++;
             }
-            else{
-                s = mid+1;
+            else if(sum >= k){
+                while(sum >= k){
+                    mini = min(mini, j-i+1);
+                    sum -= nums[i];
+                    i++;
+                }
+                j++;
             }
         }
-        return ans;
+        if(mini == INT_MAX){
+            return 0;
+        }
+        return mini;
     }
 };
-
-// class Solution {
-// public:
-//     int minSubArrayLen(int s, vector<int>& nums) {
-//         int left = 1, right = nums.size();
-//         while (left < right) {
-//             int mid = left + ((right - left) >> 1);
-//             if (existWindow(nums, mid, s)) right = mid;
-//             else left = mid + 1;
-//         }
-//         return existWindow(nums, right, s) ? right : 0;
-//     }
-    
-// };
